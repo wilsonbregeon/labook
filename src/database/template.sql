@@ -6,7 +6,7 @@ CREATE TABLE users (
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
     role TEXT NOT NULL,
-    create_at TEXT DEFAULT (DATETIME()) NOT NULL
+    created_at TEXT DEFAULT (DATETIME()) NOT NULL
 );
 
 INSERT INTO users (id, name, email, password, role)

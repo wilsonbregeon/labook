@@ -1,10 +1,11 @@
 import { PostDatabase } from "../database/PostDatabase";
-import { CreatePostInputDTO, GetPostsInputDTO, GetPostsOutputDTO } from "../dtos/userDTO";
+import { CreatePostInputDTO, EditPostInputDTO, GetPostsInputDTO, GetPostsOutputDTO } from "../dtos/userDTO";
 import { BadRequestError } from "../errors/BadRequestError";
+import { NotFoundError } from "../errors/NotFoundError";
 import { Post } from "../models/Post";
 import { IdGenerator } from "../services/IdGenerator";
 import { TokenManager } from "../services/TokenManager";
-import { PostWithCreatorDB } from "../types";
+import { PostDB, PostWithCreatorDB } from "../types";
 
 export class PostBusiness {
     constructor(
@@ -49,7 +50,7 @@ export class PostBusiness {
     }
 
     public createPost = async (input: CreatePostInputDTO): Promise<void> => {
-        const {token, name} = input
+        const { token, name } = input
 
         if (token === undefined) {
             throw new BadRequestError("token ausente!")
@@ -72,10 +73,10 @@ export class PostBusiness {
         const creadtorName = payload.name
 
         const post = new Post(
-           id,
-           name,
-           0,
-           0,
+            id,
+            name,
+            0,
+            0,
             createdAt,
             updatedAt,
             creatorId,
@@ -85,5 +86,56 @@ export class PostBusiness {
         const postDB = post.toDBModel()
 
         await this.postDatabase.insert(postDB)
+    }
+
+    public editPost = async (input: EditPostInputDTO): Promise<void> => {
+        const { idToEdit, token, name } = input
+
+        if (token === undefined) {
+            throw new BadRequestError("token ausente!")
+        }
+
+        const payload = this.tokenManager.getPayLoad(token)
+
+        if (payload === null) {
+            throw new BadRequestError("token inválido!")
+        }
+
+        if (typeof name !== "string") {
+            throw new BadRequestError("'name' deve ser string!")
+        }
+
+        const postDB = await this.postDatabase.findById(idToEdit)
+
+        if (!postDB) {
+            throw new NotFoundError("'id' não encontrado!")
+        }
+
+        const creatorId = payload.id
+
+        if (postDB.creator_id !== creatorId) {
+            throw new BadRequestError("somente quem criou o post pode editá-lo!")
+        }
+
+        const creadtorName = payload.name
+
+        const post = new Post(
+            postDB.id,
+            postDB.name,
+            postDB.likes,
+            postDB.dislikes,
+            postDB.created_at,
+            postDB.created_at,
+            creatorId,
+            creadtorName
+        )
+
+        post.setName(name)
+        post.setUpdatedAt(new Date().toISOString())
+
+        const updatedPostDB = post.toDBModel()
+
+        await this.postDatabase.update(idToEdit, updatedPostDB)
+
     }
 }

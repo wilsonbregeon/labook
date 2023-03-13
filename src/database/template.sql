@@ -69,3 +69,7 @@ WHERE id = "p002";
 SELECT * FROM  posts;
 
 SELECT * from users;
+
+-- Comando para deletar um usuário da tabela users. Obs: não esquecer de preencher o nome entre as aspas
+DELETE FROM users
+WHERE name = ""

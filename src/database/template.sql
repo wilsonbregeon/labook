@@ -66,9 +66,20 @@ SET dislikes = 1
 WHERE id = "p002";
 
 
-SELECT * FROM  posts;
+SELECT 
+   posts.id,
+   posts.creator_id,
+   posts.name,
+   posts.likes,
+   posts.dislikes,
+   posts.created_at,
+   posts.updated_at,
+   users.name AS creator_name
+FROM posts
+JOIN users
+ON posts.creator_id = users.id;
 
-SELECT * from users;
+SELECT * FROM users;
 
 -- Comando para deletar um usuário da tabela users. Obs: não esquecer de preencher o nome entre as aspas
 DELETE FROM users

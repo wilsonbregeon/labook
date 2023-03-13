@@ -81,6 +81,8 @@ ON posts.creator_id = users.id;
 
 SELECT * FROM users;
 
+SELECT * FROM posts;
+
 -- Comando para deletar um usuário da tabela users. Obs: não esquecer de preencher o nome entre as aspas
 DELETE FROM users
 WHERE name = ""

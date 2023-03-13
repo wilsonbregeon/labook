@@ -66,4 +66,6 @@ SET dislikes = 1
 WHERE id = "p002";
 
 
-SELECT * FROM  posts
+SELECT * FROM  posts;
+
+SELECT * from users;

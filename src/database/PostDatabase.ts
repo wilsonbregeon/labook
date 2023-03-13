@@ -1,4 +1,4 @@
-import { PostWithCreatorDB } from "../types";
+import { PostDB, PostWithCreatorDB } from "../types";
 import { BaseDatabase } from "./BaseDatabase";
 
 export class PostDatabase extends BaseDatabase {
@@ -21,5 +21,10 @@ export class PostDatabase extends BaseDatabase {
 
         return result
     }
-
+    
+    public insert = async (postDB: PostDB): Promise<void> => {
+        await BaseDatabase
+            .connection(PostDatabase.TABLE_POSTS)
+            .insert(postDB)
+    }
 }

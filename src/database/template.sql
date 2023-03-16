@@ -83,6 +83,14 @@ SELECT * FROM users;
 
 SELECT * FROM posts;
 
+SELECT * FROM likes_dislikes;
+
 -- Comando para deletar um usuário da tabela users. Obs: não esquecer de preencher o nome entre as aspas
 DELETE FROM users
-WHERE name = ""
+WHERE name = "";
+
+DROP TABLE users;
+
+DROP TABLE posts;
+
+DROP TABLE likes_dislikes;
